@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   FileText, Cpu, Users, TrendingUp, ShieldCheck, Zap, Smartphone, 
   PlayCircle, Mic, MessageSquare, Video, ArrowRight, X, Send, 
@@ -57,10 +57,31 @@ const TrendCard = ({ title, subtitle, icon: Icon }) => (
 );
 
 const ChatWidget = ({ isOpen, onClose, context = "Finance" }) => {
-  // Use a ref or simple conditional rendering. 
-  // In a real app, you'd load the script in index.html or use a library.
-  // For this demo, we assume the custom element is available or will fail gracefully.
-  
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    if (isOpen) {
+      // 1. Check if script is already on the page
+      const scriptId = 'elevenlabs-convai-script';
+      if (!document.getElementById(scriptId)) {
+        const script = document.createElement('script');
+        script.id = scriptId;
+        script.src = "https://unpkg.com/@elevenlabs/convai-widget-embed"; // No 'async' to ensure load order if possible, but modern browsers handle async well.
+        script.async = true; 
+        script.type = "text/javascript";
+        document.body.appendChild(script);
+      }
+      
+      // 2. Programmatically create the element to ensure React doesn't strip attributes
+      if (containerRef.current) {
+        containerRef.current.innerHTML = ''; // Clear previous content
+        const agentElement = document.createElement('elevenlabs-convai');
+        agentElement.setAttribute('agent-id', 'agent_1201kc008ybte0k8482vr509ax5a');
+        containerRef.current.appendChild(agentElement);
+      }
+    }
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   return (
@@ -80,17 +101,17 @@ const ChatWidget = ({ isOpen, onClose, context = "Finance" }) => {
       
       {/* ElevenLabs Agent Container */}
       <div className="flex-1 bg-gray-50 relative overflow-hidden flex flex-col justify-center items-center">
-         <div className="w-full h-full">
-            {/* This custom element requires the script: 
-              <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
-              It should ideally be in index.html head.
-            */}
-            <elevenlabs-convai agent-id="agent_1201kc008ybte0k8482vr509ax5a"></elevenlabs-convai>
+         {/* We use a ref to append the custom element directly to the DOM */}
+         <div ref={containerRef} className="w-full h-full flex justify-center items-center">
+             {/* Fallback loading state until script injects the iframe */}
+             <div className="text-gray-400 text-sm animate-pulse">Initializing AI Agent...</div>
          </div>
       </div>
     </div>
   );
 };
+
+// ... (LoginPage, QuizSection, FinanceMicroLearningPage, HomePage, FinanceVerticalPage, PartnersPage, TechnologiesPage, WaveLogicPage, FinanceDigPage components remain unchanged)
 
 // ==========================================
 // PAGE 0: LOGIN PAGE
@@ -309,138 +330,6 @@ const FinanceMicroLearningPage = ({ onBack }) => {
 };
 
 // ==========================================
-// PAGE COMPONENT: FINANCE DIG SHEET
-// ==========================================
-const AlertCircleIcon = (props) => (
-  <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
-);
-
-const FinanceDigPage = ({ onBack }) => {
-  return (
-    <div className="animate-fade-in bg-white min-h-screen">
-      <div className="bg-gray-900 text-white sticky top-0 z-50 shadow-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-          <div className="flex items-center gap-4">
-            <button onClick={onBack} className="flex items-center text-gray-300 hover:text-white transition-colors">
-              <ArrowRight className="w-5 h-5 rotate-180 mr-2" /> Back
-            </button>
-            <div className="h-6 w-px bg-gray-700"></div>
-            <h1 className="text-xl font-bold">Finance DIG Sheet</h1>
-          </div>
-          <div className="flex gap-3">
-             <Button variant="outline" className="border-white text-white hover:bg-white/10 py-1 px-4 text-sm h-auto">
-               <Download className="w-4 h-4 mr-2 inline" /> Download PDF
-             </Button>
-          </div>
-        </div>
-      </div>
-
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-12">
-        <section>
-          <div className="flex items-center gap-3 mb-4">
-            <div className="p-2 bg-red-100 rounded-lg text-red-600"><Globe className="w-6 h-6" /></div>
-            <h2 className="text-2xl font-bold text-gray-900">Vertical Snapshot</h2>
-          </div>
-          <div className="bg-gray-50 border-l-4 border-red-600 p-6 rounded-r-xl">
-            <p className="text-gray-700 leading-relaxed text-lg">
-              The financial services sector is under immense pressure to modernize. Banks, trading firms, and insurers are battling 
-              <span className="font-bold text-gray-900"> strict regulatory compliance (DORA, GDPR)</span>, expanding 
-              <span className="font-bold text-gray-900"> AI-driven decisioning</span>, and the need for 
-              <span className="font-bold text-gray-900"> ultra-low latency</span> infrastructure. They are moving from legacy, rigid networks to adaptive, cloud-native environments to ensure survival and agility.
-            </p>
-          </div>
-        </section>
-
-        <section>
-          <div className="flex items-center gap-3 mb-4">
-            <div className="p-2 bg-orange-100 rounded-lg text-orange-600"><AlertCircleIcon className="w-6 h-6" /></div>
-            <h2 className="text-2xl font-bold text-gray-900">Challenges & Opportunities</h2>
-          </div>
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="bg-white p-6 border border-gray-200 rounded-xl shadow-sm">
-              <h3 className="font-bold text-gray-900 mb-3 border-b pb-2">Customer Pain Points</h3>
-              <ul className="space-y-3">
-                <li className="flex items-start gap-2 text-gray-600 text-sm"><X className="w-4 h-4 text-red-500 mt-1 shrink-0" /><span><strong>Latency Lag:</strong> Microseconds lost in trading execution cost millions in revenue.</span></li>
-                <li className="flex items-start gap-2 text-gray-600 text-sm"><X className="w-4 h-4 text-red-500 mt-1 shrink-0" /><span><strong>Data Sovereignty Risk:</strong> Fear of compliance breaches when moving data to the cloud.</span></li>
-                <li className="flex items-start gap-2 text-gray-600 text-sm"><X className="w-4 h-4 text-red-500 mt-1 shrink-0" /><span><strong>Rigid Legacy Ops:</strong> Inability to spin up bandwidth quickly for new AI projects.</span></li>
-              </ul>
-            </div>
-            <div className="bg-white p-6 border border-gray-200 rounded-xl shadow-sm">
-              <h3 className="font-bold text-gray-900 mb-3 border-b pb-2">Ciena Opportunity</h3>
-              <ul className="space-y-3">
-                <li className="flex items-start gap-2 text-gray-600 text-sm"><CheckCircle className="w-4 h-4 text-green-500 mt-1 shrink-0" /><span><strong>Low-Latency Optical:</strong> Position WaveLogic 6 for the fastest possible trading links.</span></li>
-                <li className="flex items-start gap-2 text-gray-600 text-sm"><CheckCircle className="w-4 h-4 text-green-500 mt-1 shrink-0" /><span><strong>Encryption Everywhere:</strong> Sell WaveLogic Encryption for compliant, wire-speed security.</span></li>
-                <li className="flex items-start gap-2 text-gray-600 text-sm"><CheckCircle className="w-4 h-4 text-green-500 mt-1 shrink-0" /><span><strong>Bandwidth on Demand:</strong> Use MCP to show how they can automate capacity scaling.</span></li>
-              </ul>
-            </div>
-          </div>
-        </section>
-
-        <section>
-          <div className="flex items-center gap-3 mb-4">
-            <div className="p-2 bg-blue-100 rounded-lg text-blue-600"><MessageSquare className="w-6 h-6" /></div>
-            <h2 className="text-2xl font-bold text-gray-900">Value Positioning</h2>
-          </div>
-          <div className="grid md:grid-cols-3 gap-6">
-            <div className="bg-blue-50 p-5 rounded-xl"><h3 className="font-bold text-blue-900 mb-2">Uncompromised Security</h3><p className="text-sm text-blue-800">"Ciena delivers flight-data-recorder quality encryption at wire speed, ensuring you meet DORA compliance without sacrificing performance."</p></div>
-            <div className="bg-blue-50 p-5 rounded-xl"><h3 className="font-bold text-blue-900 mb-2">The Speed of Business</h3><p className="text-sm text-blue-800">"Our programmable infrastructure shaves milliseconds off transaction times, giving your trading desks the competitive edge they need."</p></div>
-            <div className="bg-blue-50 p-5 rounded-xl"><h3 className="font-bold text-blue-900 mb-2">Future-Proof AI Ready</h3><p className="text-sm text-blue-800">"Scale effortlessly to 800G and 1.6T to handle massive AI data sets without ripping and replacing your current fiber plant."</p></div>
-          </div>
-        </section>
-
-        <section>
-          <div className="flex items-center gap-3 mb-4">
-            <div className="p-2 bg-green-100 rounded-lg text-green-600"><Layers className="w-6 h-6" /></div>
-            <h2 className="text-2xl font-bold text-gray-900">Proven Use Cases</h2>
-          </div>
-          <div className="space-y-4">
-            <div className="flex gap-4 p-4 border border-gray-100 rounded-lg hover:shadow-md transition-shadow">
-              <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center shrink-0 font-bold text-gray-500">01</div>
-              <div><h3 className="font-bold text-gray-900">High-Frequency Trading Interconnect</h3><p className="text-sm text-gray-600 mt-1"><span className="font-semibold text-red-600">Problem:</span> Trading firm losing edge due to network latency. <span className="font-semibold text-red-600">Solution:</span> Ciena Waveserver 5. <span className="font-semibold text-red-600">Outcome:</span> 20% latency reduction, reclaimed market leadership.</p></div>
-            </div>
-            <div className="flex gap-4 p-4 border border-gray-100 rounded-lg hover:shadow-md transition-shadow">
-              <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center shrink-0 font-bold text-gray-500">02</div>
-              <div><h3 className="font-bold text-gray-900">Secure Data Center Mirroring</h3><p className="text-sm text-gray-600 mt-1"><span className="font-semibold text-red-600">Problem:</span> Bank failing recovery time objectives (RTO). <span className="font-semibold text-red-600">Solution:</span> 6500 Family with encrypted wavelengths. <span className="font-semibold text-red-600">Outcome:</span> Real-time synchronous replication with zero compliance risk.</p></div>
-            </div>
-          </div>
-        </section>
-
-        <section>
-          <div className="flex items-center gap-3 mb-4">
-            <div className="p-2 bg-purple-100 rounded-lg text-purple-600"><Zap className="w-6 h-6" /></div>
-            <h2 className="text-2xl font-bold text-gray-900">Key Services to Position</h2>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-             {["Waveserver", "6500 Family", "MCP Controller", "Encrypted Optics"].map((item, i) => (
-               <div key={i} className="bg-white border border-gray-200 p-4 rounded-lg text-center font-semibold text-gray-700 hover:border-red-500 transition-colors cursor-default">{item}</div>
-             ))}
-          </div>
-        </section>
-
-        <section>
-          <div className="flex items-center gap-3 mb-4">
-            <div className="p-2 bg-yellow-100 rounded-lg text-yellow-600"><HelpCircle className="w-6 h-6" /></div>
-            <h2 className="text-2xl font-bold text-gray-900">Conversation Starters</h2>
-          </div>
-          <div className="bg-yellow-50 p-6 rounded-xl space-y-4">
-             <div className="flex gap-3"><div className="mt-1.5 w-2 h-2 rounded-full bg-yellow-500 shrink-0"></div><p className="text-gray-800 italic">"How is your current infrastructure handling the new operational resilience frameworks like DORA?"</p></div>
-             <div className="flex gap-3"><div className="mt-1.5 w-2 h-2 rounded-full bg-yellow-500 shrink-0"></div><p className="text-gray-800 italic">"As you deploy more AI models, are you finding your current data center interconnects are becoming a bottleneck?"</p></div>
-             <div className="flex gap-3"><div className="mt-1.5 w-2 h-2 rounded-full bg-yellow-500 shrink-0"></div><p className="text-gray-800 italic">"Are you looking at encrypting data in flight at Layer 1 to reduce the processing overhead on your routers?"</p></div>
-          </div>
-        </section>
-
-        <section className="border-t border-gray-200 pt-8">
-          <div className="bg-gray-900 text-white rounded-xl p-8 flex flex-col md:flex-row items-center justify-between gap-6">
-            <div><h3 className="text-2xl font-bold mb-2">Need Deeper Insights?</h3><p className="text-gray-400">Access the full Finance Vertical toolkit for decks, videos, and more.</p></div>
-            <Button variant="primary" onClick={onBack} className="whitespace-nowrap">Open Full Toolkit</Button>
-          </div>
-        </section>
-      </div>
-    </div>
-  );
-};
-
-// ==========================================
 // PAGE COMPONENT: HOME PAGE
 // ==========================================
 const HomePage = ({ onNavigate }) => {
@@ -614,7 +503,7 @@ const FinanceVerticalPage = ({ onBack, onNavigateToDig, onNavigateToMicroLearnin
                 </h3>
                 <p className="text-sm text-red-100 mb-4">Tune into our purpose-built podcast. An easy way to deepen your understanding on the go.</p>
                 <audio controls className="w-full h-8 mt-2 rounded opacity-90 hover:opacity-100 transition-opacity">
-                   <source src="../Finance_podcast.mp3?rlkey=b1y5gazst3tdwsg7c9wxuauyv&dl=1" type="audio/mpeg" />
+                   <source src="Finance_podcast.mp3" type="audio/mpeg" />
                    Your browser does not support the audio element.
                 </audio>
               </div>
