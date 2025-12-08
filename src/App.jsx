@@ -727,6 +727,260 @@ const FinanceMicroLearningPage = ({ onBack }) => {
 };
 
 // ==========================================
+// PAGE 1: HOME PAGE
+// ==========================================
+const HomePage = ({ onNavigate }) => {
+  return (
+    <div className="animate-fade-in">
+      {/* Home Hero */}
+      <section className="bg-gray-900 text-white relative py-20 overflow-hidden">
+        <div className="absolute inset-0 opacity-20"><img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80" alt="Data Center" className="w-full h-full object-cover" /></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-gray-900 via-gray-900/90 to-transparent"></div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <h1 className="text-4xl md:text-5xl font-extrabold mb-6 tracking-tight">Enablement <span className="text-red-600">Portal</span></h1>
+          <p className="text-xl text-gray-300 max-w-2xl mb-8 leading-relaxed">Your central hub for Ciena enablement resources.</p>
+          <div className="flex gap-4">
+            <Button onClick={() => onNavigate('verticals')}>Explore Verticals</Button>
+            <Button variant="outline" onClick={() => onNavigate('technologies')}>Core Technologies</Button>
+          </div>
+        </div>
+      </section>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-24">
+        {/* Services Library */}
+        <section>
+          <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center gap-4"><div className="h-8 w-1 bg-red-600 rounded-full"></div><div><h2 className="text-2xl font-bold text-gray-900">Services Library</h2></div></div>
+            <button onClick={() => onNavigate('technologies')} className="text-red-600 font-semibold text-sm hover:underline">View All Technologies</button>
+          </div>
+          <div className="grid md:grid-cols-3 gap-6">
+            <Card title="Adaptive Network™" description="An end-to-end automated solution that combines programmable infrastructure, analytics, and software control." icon={Activity} actionText="View Solution" />
+            <Card title="Optical Networking" description="Market-leading coherent optics that maximize fiber capacity and reach." icon={Zap} actionText="View Solution" />
+            <Card title="Routing & Switching" description="Next-gen metro and edge routing platforms designed to bring IP and Optical layers together." icon={Layers} actionText="View Solution" />
+          </div>
+        </section>
+
+        {/* Partner Profiles */}
+        <section className="bg-gray-50 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 py-16">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex items-center justify-between mb-8">
+              <div className="flex items-center gap-4"><div className="h-8 w-1 bg-red-600 rounded-full"></div><div><h2 className="text-2xl font-bold text-gray-900">Partner Profiles</h2></div></div>
+              <button onClick={() => onNavigate('partners')} className="text-red-600 font-semibold text-sm hover:underline flex items-center group">View All Profiles <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" /></button>
+            </div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <Card title="Virgin Media O2" description="Converged connectivity champion in the UK. Key opportunities in high-capacity backhaul." icon={Globe} accentColor="red" badges={["Tier 1", "UK"]} actionText="View Profile" />
+              <Card title="Colt" description="Global digital infrastructure company. Investing heavily in IQ Network and On Demand services." icon={Server} accentColor="rose" badges={["Global", "On Demand"]} actionText="View Profile" />
+              <Card title="Zayo" description="Leading communications infrastructure provider. Strategic partner for dark fiber." icon={Zap} accentColor="orange" badges={["Infrastructure"]} actionText="View Profile" />
+            </div>
+          </div>
+        </section>
+
+        {/* Market / Vertical Knowledge */}
+        <section id="verticals">
+          <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center gap-4"><div className="h-8 w-1 bg-red-600 rounded-full"></div><div><h2 className="text-2xl font-bold text-gray-900">Market & Vertical Knowledge</h2></div></div>
+            <button onClick={() => onNavigate('verticals')} className="text-red-600 font-semibold text-sm hover:underline flex items-center group">View All Verticals <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" /></button>
+          </div>
+          <div className="grid md:grid-cols-3 gap-6">
+            <div onClick={() => onNavigate('finance')} className="bg-white p-6 rounded-xl shadow-lg border-t-4 border-red-600 hover:shadow-2xl hover:-translate-y-1 transition-all cursor-pointer group">
+              <div className="flex justify-between items-start mb-4">
+                <div className="p-3 bg-red-50 rounded-lg group-hover:bg-red-100 transition-colors"><TrendingUp className="w-8 h-8 text-red-600" /></div>
+                <span className="bg-red-100 text-red-800 text-xs font-bold px-2 py-1 rounded">FEATURED</span>
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">Finance</h3>
+              <p className="text-gray-600 mb-6 text-sm">High-frequency trading, compliance, and data sovereignty.</p>
+              <div className="flex items-center text-red-600 font-bold text-sm">Open Toolkit <ArrowRight className="w-4 h-4 ml-2" /></div>
+            </div>
+            <Card title="Healthcare" description="Telemedicine and large imaging data transfers." icon={Activity} accentColor="teal" actionText="Coming Soon" />
+            <Card title="Utilities" description="Smart grid modernization and OT/IT convergence." icon={Zap} accentColor="orange" actionText="Coming Soon" />
+          </div>
+        </section>
+      </div>
+    </div>
+  );
+};
+
+// ==========================================
+// PAGE 2: FINANCE VERTICAL PAGE
+// ==========================================
+const FinanceVerticalPage = ({ onBack, onNavigateToDig, onNavigateToMicroLearning }) => {
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  return (
+    <div className="animate-fade-in">
+       {/* Breadcrumb */}
+       <div className="bg-gray-100 border-b border-gray-200 px-4 sm:px-6 lg:px-8 py-3">
+        <div className="max-w-7xl mx-auto flex items-center text-sm text-gray-500">
+           <button onClick={onBack} className="hover:text-red-600 font-medium transition-colors">Home</button>
+           <span className="mx-2">/</span>
+           <span className="text-gray-900 font-medium">Verticals</span>
+           <span className="mx-2">/</span>
+           <span className="text-red-600 font-medium">Finance</span>
+        </div>
+       </div>
+
+      <header className="relative bg-gray-900 text-white overflow-hidden">
+        <div className="absolute inset-0 opacity-40"><img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80" alt="Finance Skyscraper" className="w-full h-full object-cover" /></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-gray-900 via-gray-900/80 to-transparent"></div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
+          <div className="max-w-2xl animate-fade-in">
+            <h2 className="text-red-500 font-bold uppercase tracking-widest mb-4">Enablement Toolkit</h2>
+            <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-6">Finance Vertical</h1>
+            <p className="text-xl text-gray-300 mb-8 font-light">Decision Intelligence & Strategic Insights designed to accelerate your customer conversations.</p>
+            <div className="flex flex-wrap gap-4">
+              <Button onClick={() => document.getElementById('resources').scrollIntoView({ behavior: 'smooth' })}>Explore Resources</Button>
+              <Button variant="white" onClick={() => setIsChatOpen(true)}><Cpu className="w-4 h-4 mr-2 inline" />Launch AI Coach</Button>
+            </div>
+          </div>
+        </div>
+      </header>
+      
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-20">
+        <section id="resources">
+          <div className="flex items-center gap-4 mb-8"><div className="h-8 w-1 bg-red-600 rounded-full"></div><h2 className="text-2xl font-bold">Quick Access Tools</h2></div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <Card title="Finance DIG" description="Your comprehensive Decision Intelligence Guide." icon={FileText} actionText="View DIG Sheet" onClick={onNavigateToDig}/>
+            <Card title="Strategic Deck" description="Customer-facing presentation slides." icon={Users} actionText="View Deck" />
+            <Card title="Intelligence Pack" description="Deep dive vertical intelligence." icon={TrendingUp} actionText="Access Pack" />
+            <Card title="Proof & Outcomes" description="Case studies and proof points." icon={ShieldCheck} actionText="Read Stories" />
+          </div>
+        </section>
+
+        <section className="grid md:grid-cols-2 gap-8">
+          <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-8 text-white relative overflow-hidden shadow-xl group">
+            <div className="absolute top-0 right-0 p-4 opacity-10"><Cpu className="w-48 h-48" /></div>
+            <div className="relative z-10">
+              <div className="inline-block px-3 py-1 bg-red-600 rounded-full text-xs font-bold mb-4">NEW</div>
+              <h3 className="text-2xl font-bold mb-4">AI Virtual Coach</h3>
+              <p className="text-gray-300 mb-6 leading-relaxed">Get instant, conversational guidance tailored to the finance sector. Practice discovery questions and test your positioning.</p>
+              <Button variant="white" onClick={() => setIsChatOpen(true)}>Start Session</Button>
+            </div>
+          </div>
+          <div className="bg-white rounded-2xl p-8 border border-gray-200 shadow-lg flex flex-col justify-center">
+            <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mb-6"><Users className="w-6 h-6 text-red-600" /></div>
+            <h3 className="text-2xl font-bold mb-4 text-gray-900">Connect with the CMS Team</h3>
+            <p className="text-gray-600 mb-6 leading-relaxed">Available to support your work across the finance vertical. Reach out for expert guidance.</p>
+            <div><Button variant="outline">Contact Expert</Button></div>
+          </div>
+        </section>
+
+        <section>
+          <div className="flex items-center gap-4 mb-8"><div className="h-8 w-1 bg-red-600 rounded-full"></div><h2 className="text-2xl font-bold">Market Trends & Insights</h2></div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <TrendCard subtitle="AI Decisioning" title="Rise of AI-Driven Decisioning in Financial Services" icon={Cpu} />
+            <TrendCard subtitle="Compliance" title="Compliance Pressure and the New Era of Secure Data" icon={ShieldCheck} />
+            <TrendCard subtitle="Low Latency" title="Modernising Trading Infrastructure for Ultra-Low Latency" icon={Zap} />
+            <TrendCard subtitle="Digital Banking" title="The Shift to Digital Banking and Cloud-Native Ops" icon={Smartphone} />
+          </div>
+        </section>
+
+        <section>
+          <div className="flex items-center gap-4 mb-8"><div className="h-8 w-1 bg-red-600 rounded-full"></div><h2 className="text-2xl font-bold">Learning Modules</h2></div>
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm hover:shadow-lg transition-all flex gap-6">
+              <div className="shrink-0"><div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center"><PlayCircle className="w-8 h-8 text-gray-400" /></div></div>
+              <div><h3 className="text-lg font-bold mb-2">Micro Learning Module</h3><p className="text-sm text-gray-600 mb-4">A quick, interactive module to build confidence in finance in just a few minutes.</p><Button variant="text" className="text-sm" onClick={onNavigateToMicroLearning}>Launch Module <ArrowRight className="w-3 h-3 ml-1 inline"/></Button></div>
+            </div>
+            
+            <div className="bg-red-600 p-6 rounded-xl shadow-md hover:shadow-lg transition-all flex gap-6 text-white">
+              <div className="shrink-0"><div className="w-16 h-16 bg-red-500/50 rounded-lg flex items-center justify-center"><Mic className="w-8 h-8 text-white" /></div></div>
+              <div className="w-full">
+                <h3 className="text-lg font-bold mb-2">Podcast Series</h3>
+                <p className="text-sm text-red-100 mb-4">Tune into our purpose-built podcast. An easy way to deepen your understanding on the go.</p>
+                <audio controls className="w-full h-8 mt-2 rounded opacity-90 hover:opacity-100 transition-opacity">
+                   <source src="https://www.dropbox.com/scl/fi/eo3czj23g4ct15kyzg10q/Finance_podcast.mp3?rlkey=b1y5gazst3tdwsg7c9wxuauyv&dl=1" type="audio/mpeg" />
+                   Your browser does not support the audio element.
+                </audio>
+              </div>
+            </div>
+
+            <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm hover:shadow-lg transition-all flex gap-6">
+              <div className="shrink-0"><div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center"><MessageSquare className="w-8 h-8 text-gray-400" /></div></div>
+              <div><h3 className="text-lg font-bold mb-2">Meeting Simulation</h3><p className="text-sm text-gray-600 mb-4">Rehearse a live customer conversation with a virtual Finance exec.</p><Button variant="text" className="text-sm">Start Sim <ArrowRight className="w-3 h-3 ml-1 inline"/></Button></div>
+            </div>
+            <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm hover:shadow-lg transition-all flex gap-6">
+              <div className="shrink-0"><div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center"><Video className="w-8 h-8 text-gray-400" /></div></div>
+              <div><h3 className="text-lg font-bold mb-2">Webinars</h3><p className="text-sm text-gray-600 mb-4">Access curated pre-recorded webinars covering developments in the sector.</p><Button variant="text" className="text-sm">Browse Library <ArrowRight className="w-3 h-3 ml-1 inline"/></Button></div>
+            </div>
+          </div>
+        </section>
+
+      </main>
+      <ChatWidget isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
+    </div>
+  );
+};
+
+// ==========================================
+// PAGE 3: PARTNERS PAGE
+// ==========================================
+const PartnersPage = ({ onBack }) => {
+  const partners = [
+    { name: "Ziply Fiber", url: "ziplyfiber.com", type: "Carrier Managed Services Provider" },
+    { name: "Vocus", url: "www.vocus.com.au", type: "Carrier Managed Services Provider" },
+    { name: "Verizon", url: "www.verizon.com", type: "Carrier Managed Services Provider" },
+    { name: "Uniti Fiber", url: "www.uniti.com", type: "Carrier Managed Services Provider" },
+    { name: "Telxius Cable", url: "www.telxius.com", type: "Carrier Managed Services Provider" },
+    { name: "Tampnet AS", url: "www.tampnet.com", type: "Carrier Managed Services Provider" },
+    { name: "PLDT Inc.", url: "www.pldt.com.ph", type: "Carrier Managed Services Provider" },
+    { name: "FLAG Telecom", url: "www.flagtel.com", type: "Carrier Managed Services Provider" },
+    { name: "Etisalat", url: "www.etisalat.ae", type: "Carrier Managed Services Provider" },
+    { name: "Space World", url: "www.constl.com", type: "Carrier Managed Services Provider" },
+    { name: "Consolidated", url: "www.consolidated.com", type: "Carrier Managed Services Provider" },
+    { name: "Claro", url: "www.claro.com.co", type: "Carrier Managed Services Provider" },
+    { name: "Cirion", url: "www.ciriontechnologies.com", type: "Carrier Managed Services Provider" },
+    { name: "Beyon", url: "www.batelco.com", type: "Carrier Managed Services Provider" },
+    { name: "Arelion", url: "www.arelion.com", type: "Carrier Managed Services Provider" },
+    { name: "Aqua Comms", url: "www.aquacomms.com", type: "Carrier Managed Services Provider" },
+    { name: "Angola Cables", url: "www.angolacables.co.ao", type: "Carrier Managed Services Provider" },
+    { name: "WIN Technology", url: "wintechnology.com", type: "Carrier Managed Services Provider" },
+    { name: "EXA Infrastructure", url: "www.exainfra.net", type: "Carrier Managed Services Provider" },
+    { name: "WOW!", url: "www.wowway.com", type: "Carrier Managed Services Provider" },
+    { name: "Vodafone", url: "www.vodafone.co.uk", type: "Carrier Managed Services Provider" }
+  ];
+
+  return (
+    <div className="animate-fade-in bg-gray-50 min-h-screen pb-12">
+      <div className="bg-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+           <h1 className="text-3xl font-bold text-gray-900 mb-2">Find a Partner</h1>
+           <p className="text-gray-500 max-w-2xl">Locate the right partner to help you design, build, and manage your network with Ciena solutions.</p>
+        </div>
+      </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex flex-col md:flex-row gap-8">
+          <div className="w-full md:w-64 flex-shrink-0 space-y-6">
+            <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+              <div className="flex justify-between items-center mb-3"><h3 className="font-bold text-gray-900 text-sm">Filters</h3><button className="text-xs text-blue-600 hover:underline">Clear All</button></div>
+              <div className="flex flex-wrap gap-2 mb-4"><div className="flex items-center bg-gray-200 text-gray-700 px-2 py-1 rounded text-xs">Carrier Managed... <X className="w-3 h-3 ml-1 cursor-pointer"/></div></div>
+            </div>
+            <div className="border-b border-gray-200 pb-4"><button className="flex justify-between w-full text-left font-semibold text-sm text-gray-900 mb-2">Ciena Partner Type <ChevronDown className="w-4 h-4"/></button><div className="space-y-2 pl-1"><label className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer"><input type="checkbox" className="rounded text-red-600 focus:ring-red-500" defaultChecked/><span>Carrier Managed Services Provider [77]</span></label></div></div>
+            <div className="border-b border-gray-200 pb-4"><button className="flex justify-between w-full text-left font-semibold text-sm text-gray-900 mb-2">Geo Regions served <ChevronDown className="w-4 h-4"/></button><div className="space-y-2 pl-1">{["North America [48]", "NorthAm Federal [14]", "Europe Middle East [20]", "Caribbean & Latin [13]", "Asia Pacific [15]"].map((item, i) => (<label key={i} className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer"><input type="checkbox" className="rounded text-red-600 focus:ring-red-500"/><span>{item}</span></label>))}</div></div>
+             <div className="border-b border-gray-200 pb-4"><button className="flex justify-between w-full text-left font-semibold text-sm text-gray-900 mb-2">Vertical <ChevronDown className="w-4 h-4"/></button><div className="space-y-2 pl-1">{["Banking/Finance [56]", "Education [44]", "Gov/Civilian [17]", "Healthcare [46]"].map((item, i) => (<label key={i} className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer"><input type="checkbox" className="rounded text-red-600 focus:ring-red-500"/><span>{item}</span></label>))}</div></div>
+          </div>
+          <div className="flex-1">
+             <div className="mb-6 relative"><input type="text" placeholder="Search partners..." className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 shadow-sm"/><Search className="absolute left-3 top-3.5 text-gray-400 w-5 h-5"/></div>
+             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+               {partners.map((p, idx) => (
+                 <div key={idx} className="bg-white border border-gray-100 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col items-start h-full">
+                    <div className="h-12 w-auto mb-4 flex items-center">
+                       <img src={`https://logo.clearbit.com/${p.url}`} alt={p.name} className="max-h-12 max-w-[120px] object-contain" onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'block'; }}/>
+                       <span className="text-xl font-bold text-gray-800 hidden">{p.name}</span>
+                    </div>
+                    <h3 className="font-bold text-gray-900 mb-1">{p.name}</h3>
+                    <p className="text-xs text-blue-600 mb-2 hover:underline cursor-pointer">{p.url}</p>
+                    <p className="text-xs text-gray-500 mt-auto pt-4 border-t w-full border-gray-50">{p.type}</p>
+                 </div>
+               ))}
+             </div>
+             <div className="mt-8 flex justify-center items-center gap-4 text-sm font-medium text-gray-600"><span className="text-gray-400 cursor-not-allowed">← Previous</span><span className="text-red-600 border-b-2 border-red-600 px-2 pb-1">1</span><span className="hover:text-red-600 cursor-pointer">2</span><span className="hover:text-red-600 cursor-pointer">3</span><span className="hover:text-red-600 cursor-pointer">Next →</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ==========================================
 // THE DIRECTOR (Main App Logic)
 // ==========================================
 export default function App() {
