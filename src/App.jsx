@@ -3,7 +3,7 @@ import {
   FileText, Cpu, Users, TrendingUp, ShieldCheck, Zap, Smartphone, 
   PlayCircle, Mic, MessageSquare, Video, ArrowRight, X, Send, 
   Menu, Globe, Server, Activity, Layers, Search, Filter, ChevronDown, ChevronRight, Lock, Mail,
-  Wifi, Box, Key, Network, Download, BarChart, CheckCircle, HelpCircle, BookOpen, Clock, Target, Award
+  Wifi, Box, Key, Network, Download, BarChart, CheckCircle, HelpCircle, BookOpen, Clock, Target, Award, ExternalLink
 } from 'lucide-react';
 
 // ==========================================
@@ -21,7 +21,7 @@ const Button = ({ children, variant = 'primary', className = '', ...props }) => 
   return <button className={`${baseStyle} ${variants[variant]} ${className}`} {...props}>{children}</button>;
 };
 
-const Card = ({ title, description, icon: Icon, actionText, onClick, accentColor = "red", badges = [] }) => (
+const Card = ({ title, description, icon: Icon, actionText, onClick, accentColor = "red", badges = [], isLiveLink = false }) => (
   <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 flex flex-col h-full group cursor-pointer" onClick={onClick}>
     <div className="flex justify-between items-start mb-4">
       <div className={`w-12 h-12 rounded-lg bg-${accentColor}-50 flex items-center justify-center group-hover:scale-110 transition-transform`}>
@@ -33,10 +33,13 @@ const Card = ({ title, description, icon: Icon, actionText, onClick, accentColor
         </div>
       )}
     </div>
-    <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-red-600 transition-colors">{title}</h3>
+    <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-red-600 transition-colors flex items-center gap-2">
+      {title}
+      {isLiveLink && <span className="bg-green-100 text-green-800 text-[10px] px-1.5 py-0.5 rounded border border-green-200 uppercase tracking-wide font-bold flex items-center gap-1"><ExternalLink className="w-3 h-3"/> Live</span>}
+    </h3>
     <p className="text-gray-600 mb-6 flex-grow text-sm leading-relaxed">{description}</p>
     {actionText && (
-      <div className="flex items-center text-red-600 font-semibold text-sm group-hover:translate-x-1 transition-transform">
+      <div className={`flex items-center font-semibold text-sm group-hover:translate-x-1 transition-transform ${isLiveLink ? 'text-green-600' : 'text-red-600'}`}>
         {actionText} <ArrowRight className="w-4 h-4 ml-2" />
       </div>
     )}
@@ -54,19 +57,10 @@ const TrendCard = ({ title, subtitle, icon: Icon }) => (
 );
 
 const ChatWidget = ({ isOpen, onClose, context = "Finance" }) => {
-  useEffect(() => {
-    if (isOpen) {
-      // Check if script already exists to avoid duplicates
-      if (!document.querySelector('script[src="https://unpkg.com/@elevenlabs/convai-widget-embed"]')) {
-        const script = document.createElement('script');
-        script.src = "https://unpkg.com/@elevenlabs/convai-widget-embed";
-        script.async = true;
-        script.type = "text/javascript";
-        document.body.appendChild(script);
-      }
-    }
-  }, [isOpen]);
-
+  // Use a ref or simple conditional rendering. 
+  // In a real app, you'd load the script in index.html or use a library.
+  // For this demo, we assume the custom element is available or will fail gracefully.
+  
   if (!isOpen) return null;
 
   return (
@@ -87,6 +81,10 @@ const ChatWidget = ({ isOpen, onClose, context = "Finance" }) => {
       {/* ElevenLabs Agent Container */}
       <div className="flex-1 bg-gray-50 relative overflow-hidden flex flex-col justify-center items-center">
          <div className="w-full h-full">
+            {/* This custom element requires the script: 
+              <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
+              It should ideally be in index.html head.
+            */}
             <elevenlabs-convai agent-id="agent_1201kc008ybte0k8482vr509ax5a"></elevenlabs-convai>
          </div>
       </div>
@@ -95,7 +93,7 @@ const ChatWidget = ({ isOpen, onClose, context = "Finance" }) => {
 };
 
 // ==========================================
-// PAGE COMPONENT: LOGIN
+// PAGE 0: LOGIN PAGE
 // ==========================================
 const LoginPage = ({ onLogin }) => {
   const [email, setEmail] = useState('consultant@ciena.com');
@@ -311,141 +309,12 @@ const FinanceMicroLearningPage = ({ onBack }) => {
 };
 
 // ==========================================
-// PAGE COMPONENT: VERTICALS PAGE
-// ==========================================
-const VerticalsPage = ({ onNavigate }) => {
-  const verticals = [
-    { id: 'finance', title: 'Finance', icon: TrendingUp, description: 'High-frequency trading, compliance, and data sovereignty.', status: 'Available' },
-    { id: 'healthcare', title: 'Healthcare', icon: Activity, description: 'Telemedicine, large imaging data, and secure patient records.', status: 'Coming Soon' },
-    { id: 'utilities', title: 'Utilities', icon: Zap, description: 'Smart grid modernization and OT/IT convergence.', status: 'Coming Soon' },
-    { id: 'government', title: 'Government', icon: ShieldCheck, description: 'Secure, resilient networks for defense and civilian agencies.', status: 'Coming Soon' },
-    { id: 'education', title: 'Education', icon: BookOpen, description: 'Connected campuses and remote learning infrastructure.', status: 'Coming Soon' },
-    { id: 'sp', title: 'Service Providers', icon: Globe, description: 'Next-gen 5G, residential broadband, and enterprise services.', status: 'Coming Soon' }
-  ];
-
-  return (
-    <div className="animate-fade-in bg-gray-50 min-h-screen pb-12">
-       <div className="bg-gray-100 border-b border-gray-200 px-4 sm:px-6 lg:px-8 py-3">
-        <div className="max-w-7xl mx-auto flex items-center text-sm text-gray-500">
-           <button onClick={() => onNavigate('home')} className="hover:text-red-600 font-medium transition-colors">Home</button>
-           <span className="mx-2">/</span>
-           <span className="text-red-600 font-medium">Verticals</span>
-        </div>
-       </div>
-
-      <div className="bg-gray-900 text-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-           <h1 className="text-4xl font-bold mb-4">Industry Verticals</h1>
-           <p className="text-xl text-gray-400 max-w-3xl">Specialized insights, trends, and solution guides for our key markets.</p>
-        </div>
-      </div>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {verticals.map((v, i) => (
-            <div 
-              key={i} 
-              onClick={() => v.status === 'Available' ? onNavigate(v.id) : null}
-              className={`bg-white p-6 rounded-xl shadow-md border border-gray-100 flex flex-col h-full group ${v.status === 'Available' ? 'cursor-pointer hover:shadow-xl transition-all hover:-translate-y-1' : 'opacity-75'}`}
-            >
-              <div className="flex justify-between items-start mb-4">
-                <div className={`w-12 h-12 rounded-lg bg-gray-50 flex items-center justify-center ${v.status === 'Available' ? 'group-hover:bg-red-50' : ''}`}>
-                  <v.icon className={`w-6 h-6 ${v.status === 'Available' ? 'text-gray-700 group-hover:text-red-600' : 'text-gray-400'}`} />
-                </div>
-                {v.status === 'Available' ? (
-                   <span className="bg-green-100 text-green-800 text-xs font-bold px-2 py-1 rounded">AVAILABLE</span>
-                ) : (
-                   <span className="bg-gray-100 text-gray-500 text-xs font-bold px-2 py-1 rounded">COMING SOON</span>
-                )}
-              </div>
-              <h3 className={`text-xl font-bold mb-2 ${v.status === 'Available' ? 'text-gray-900 group-hover:text-red-600' : 'text-gray-500'}`}>{v.title}</h3>
-              <p className="text-gray-600 mb-6 flex-grow text-sm leading-relaxed">{v.description}</p>
-              {v.status === 'Available' && (
-                <div className="flex items-center text-red-600 font-semibold text-sm group-hover:translate-x-1 transition-transform">
-                  Explore Toolkit <ArrowRight className="w-4 h-4 ml-2" />
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// ==========================================
-// PAGE COMPONENT: PARTNERS PAGE
-// ==========================================
-const PartnersPage = ({ onBack }) => {
-  const partners = [
-    { name: "Ziply Fiber", url: "ziplyfiber.com", type: "Carrier Managed Services Provider" },
-    { name: "Vocus", url: "www.vocus.com.au", type: "Carrier Managed Services Provider" },
-    { name: "Verizon", url: "www.verizon.com", type: "Carrier Managed Services Provider" },
-    { name: "Uniti Fiber", url: "www.uniti.com", type: "Carrier Managed Services Provider" },
-    { name: "Telxius Cable", url: "www.telxius.com", type: "Carrier Managed Services Provider" },
-    { name: "Tampnet AS", url: "www.tampnet.com", type: "Carrier Managed Services Provider" },
-    { name: "PLDT Inc.", url: "www.pldt.com.ph", type: "Carrier Managed Services Provider" },
-    { name: "FLAG Telecom", url: "www.flagtel.com", type: "Carrier Managed Services Provider" },
-    { name: "Etisalat", url: "www.etisalat.ae", type: "Carrier Managed Services Provider" },
-    { name: "Space World", url: "www.constl.com", type: "Carrier Managed Services Provider" },
-    { name: "Consolidated", url: "www.consolidated.com", type: "Carrier Managed Services Provider" },
-    { name: "Claro", url: "www.claro.com.co", type: "Carrier Managed Services Provider" },
-    { name: "Cirion", url: "www.ciriontechnologies.com", type: "Carrier Managed Services Provider" },
-    { name: "Beyon", url: "www.batelco.com", type: "Carrier Managed Services Provider" },
-    { name: "Arelion", url: "www.arelion.com", type: "Carrier Managed Services Provider" },
-    { name: "Aqua Comms", url: "www.aquacomms.com", type: "Carrier Managed Services Provider" },
-    { name: "Angola Cables", url: "www.angolacables.co.ao", type: "Carrier Managed Services Provider" },
-    { name: "WIN Technology", url: "wintechnology.com", type: "Carrier Managed Services Provider" },
-    { name: "EXA Infrastructure", url: "www.exainfra.net", type: "Carrier Managed Services Provider" },
-    { name: "WOW!", url: "www.wowway.com", type: "Carrier Managed Services Provider" },
-    { name: "Vodafone", url: "www.vodafone.co.uk", type: "Carrier Managed Services Provider" }
-  ];
-
-  return (
-    <div className="animate-fade-in bg-gray-50 min-h-screen pb-12">
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-           <h1 className="text-3xl font-bold text-gray-900 mb-2">Find a Partner</h1>
-           <p className="text-gray-500 max-w-2xl">Locate the right partner to help you design, build, and manage your network with Ciena solutions.</p>
-        </div>
-      </div>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex flex-col md:flex-row gap-8">
-          <div className="w-full md:w-64 flex-shrink-0 space-y-6">
-            <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-              <div className="flex justify-between items-center mb-3"><h3 className="font-bold text-gray-900 text-sm">Filters</h3><button className="text-xs text-blue-600 hover:underline">Clear All</button></div>
-              <div className="flex flex-wrap gap-2 mb-4"><div className="flex items-center bg-gray-200 text-gray-700 px-2 py-1 rounded text-xs">Carrier Managed... <X className="w-3 h-3 ml-1 cursor-pointer"/></div></div>
-            </div>
-            <div className="border-b border-gray-200 pb-4"><button className="flex justify-between w-full text-left font-semibold text-sm text-gray-900 mb-2">Ciena Partner Type <ChevronDown className="w-4 h-4"/></button><div className="space-y-2 pl-1"><label className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer"><input type="checkbox" className="rounded text-red-600 focus:ring-red-500" defaultChecked/><span>Carrier Managed Services Provider [77]</span></label></div></div>
-            <div className="border-b border-gray-200 pb-4"><button className="flex justify-between w-full text-left font-semibold text-sm text-gray-900 mb-2">Geo Regions served <ChevronDown className="w-4 h-4"/></button><div className="space-y-2 pl-1">{["North America [48]", "NorthAm Federal [14]", "Europe Middle East [20]", "Caribbean & Latin [13]", "Asia Pacific [15]"].map((item, i) => (<label key={i} className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer"><input type="checkbox" className="rounded text-red-600 focus:ring-red-500"/><span>{item}</span></label>))}</div></div>
-             <div className="border-b border-gray-200 pb-4"><button className="flex justify-between w-full text-left font-semibold text-sm text-gray-900 mb-2">Vertical <ChevronDown className="w-4 h-4"/></button><div className="space-y-2 pl-1">{["Banking/Finance [56]", "Education [44]", "Gov/Civilian [17]", "Healthcare [46]"].map((item, i) => (<label key={i} className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer"><input type="checkbox" className="rounded text-red-600 focus:ring-red-500"/><span>{item}</span></label>))}</div></div>
-          </div>
-          <div className="flex-1">
-             <div className="mb-6 relative"><input type="text" placeholder="Search partners..." className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 shadow-sm"/><Search className="absolute left-3 top-3.5 text-gray-400 w-5 h-5"/></div>
-             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-               {partners.map((p, idx) => (
-                 <div key={idx} className="bg-white border border-gray-100 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col items-start h-full">
-                    <div className="h-12 w-auto mb-4 flex items-center">
-                       <img src={`https://logo.clearbit.com/${p.url}`} alt={p.name} className="max-h-12 max-w-[120px] object-contain" onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'block'; }}/>
-                       <span className="text-xl font-bold text-gray-800 hidden">{p.name}</span>
-                    </div>
-                    <h3 className="font-bold text-gray-900 mb-1">{p.name}</h3>
-                    <p className="text-xs text-blue-600 mb-2 hover:underline cursor-pointer">{p.url}</p>
-                    <p className="text-xs text-gray-500 mt-auto pt-4 border-t w-full border-gray-50">{p.type}</p>
-                 </div>
-               ))}
-             </div>
-             <div className="mt-8 flex justify-center items-center gap-4 text-sm font-medium text-gray-600"><span className="text-gray-400 cursor-not-allowed">← Previous</span><span className="text-red-600 border-b-2 border-red-600 px-2 pb-1">1</span><span className="hover:text-red-600 cursor-pointer">2</span><span className="hover:text-red-600 cursor-pointer">3</span><span className="hover:text-red-600 cursor-pointer">Next →</span></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// ==========================================
 // PAGE COMPONENT: FINANCE DIG SHEET
 // ==========================================
+const AlertCircleIcon = (props) => (
+  <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
+);
+
 const FinanceDigPage = ({ onBack }) => {
   return (
     <div className="animate-fade-in bg-white min-h-screen">
@@ -577,6 +446,7 @@ const FinanceDigPage = ({ onBack }) => {
 const HomePage = ({ onNavigate }) => {
   return (
     <div className="animate-fade-in">
+      {/* Home Hero */}
       <section className="bg-gray-900 text-white relative py-20 overflow-hidden">
         <div className="absolute inset-0 opacity-20"><img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80" alt="Data Center" className="w-full h-full object-cover" /></div>
         <div className="absolute inset-0 bg-gradient-to-r from-gray-900 via-gray-900/90 to-transparent"></div>
@@ -591,6 +461,7 @@ const HomePage = ({ onNavigate }) => {
       </section>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-24">
+        {/* Services Library */}
         <section>
           <div className="flex items-center justify-between mb-8">
             <div className="flex items-center gap-4"><div className="h-8 w-1 bg-red-600 rounded-full"></div><div><h2 className="text-2xl font-bold text-gray-900">Services Library</h2></div></div>
@@ -603,6 +474,7 @@ const HomePage = ({ onNavigate }) => {
           </div>
         </section>
 
+        {/* Partner Profiles */}
         <section className="bg-gray-50 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 py-16">
           <div className="max-w-7xl mx-auto">
             <div className="flex items-center justify-between mb-8">
@@ -617,6 +489,7 @@ const HomePage = ({ onNavigate }) => {
           </div>
         </section>
 
+        {/* Market / Vertical Knowledge */}
         <section id="verticals">
           <div className="flex items-center justify-between mb-8">
             <div className="flex items-center gap-4"><div className="h-8 w-1 bg-red-600 rounded-full"></div><div><h2 className="text-2xl font-bold text-gray-900">Market & Vertical Knowledge</h2></div></div>
@@ -630,7 +503,10 @@ const HomePage = ({ onNavigate }) => {
               </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-2">Finance</h3>
               <p className="text-gray-600 mb-6 text-sm">High-frequency trading, compliance, and data sovereignty.</p>
-              <div className="flex items-center text-red-600 font-bold text-sm">Open Toolkit <ArrowRight className="w-4 h-4 ml-2" /></div>
+              <div className="flex items-center text-red-600 font-bold text-sm">
+                 <span className="bg-green-100 text-green-800 text-[10px] px-1.5 py-0.5 rounded border border-green-200 uppercase tracking-wide font-bold flex items-center gap-1 mr-2"><ExternalLink className="w-3 h-3"/> Live</span>
+                 Open Toolkit <ArrowRight className="w-4 h-4 ml-2" />
+              </div>
             </div>
             <Card title="Healthcare" description="Telemedicine and large imaging data transfers." icon={Activity} accentColor="teal" actionText="Coming Soon" />
             <Card title="Utilities" description="Smart grid modernization and OT/IT convergence." icon={Zap} accentColor="orange" actionText="Coming Soon" />
@@ -679,7 +555,7 @@ const FinanceVerticalPage = ({ onBack, onNavigateToDig, onNavigateToMicroLearnin
         <section id="resources">
           <div className="flex items-center gap-4 mb-8"><div className="h-8 w-1 bg-red-600 rounded-full"></div><h2 className="text-2xl font-bold">Quick Access Tools</h2></div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Card title="Finance DIG" description="Your comprehensive Decision Intelligence Guide." icon={FileText} actionText="View DIG Sheet" onClick={onNavigateToDig}/>
+            <Card title="Finance DIG" description="Your comprehensive Decision Intelligence Guide." icon={FileText} actionText="View DIG Sheet" onClick={onNavigateToDig} isLiveLink={true} />
             <Card title="Strategic Deck" description="Customer-facing presentation slides." icon={Users} actionText="View Deck" />
             <Card title="Intelligence Pack" description="Deep dive vertical intelligence." icon={TrendingUp} actionText="Access Pack" />
             <Card title="Proof & Outcomes" description="Case studies and proof points." icon={ShieldCheck} actionText="Read Stories" />
@@ -719,13 +595,23 @@ const FinanceVerticalPage = ({ onBack, onNavigateToDig, onNavigateToMicroLearnin
           <div className="grid md:grid-cols-2 gap-8">
             <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm hover:shadow-lg transition-all flex gap-6">
               <div className="shrink-0"><div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center"><PlayCircle className="w-8 h-8 text-gray-400" /></div></div>
-              <div><h3 className="text-lg font-bold mb-2">Micro Learning Module</h3><p className="text-sm text-gray-600 mb-4">A quick, interactive module to build confidence in finance in just a few minutes.</p><Button variant="text" className="text-sm" onClick={onNavigateToMicroLearning}>Launch Module <ArrowRight className="w-3 h-3 ml-1 inline"/></Button></div>
+              <div>
+                <h3 className="text-lg font-bold mb-2 flex items-center gap-2">
+                   Micro Learning Module 
+                   <span className="bg-green-100 text-green-800 text-[10px] px-1.5 py-0.5 rounded border border-green-200 uppercase tracking-wide font-bold flex items-center gap-1"><ExternalLink className="w-3 h-3"/> Live</span>
+                </h3>
+                <p className="text-sm text-gray-600 mb-4">A quick, interactive module to build confidence in finance in just a few minutes.</p>
+                <Button variant="text" className="text-sm" onClick={onNavigateToMicroLearning}>Launch Module <ArrowRight className="w-3 h-3 ml-1 inline"/></Button>
+              </div>
             </div>
             
             <div className="bg-red-600 p-6 rounded-xl shadow-md hover:shadow-lg transition-all flex gap-6 text-white">
               <div className="shrink-0"><div className="w-16 h-16 bg-red-500/50 rounded-lg flex items-center justify-center"><Mic className="w-8 h-8 text-white" /></div></div>
               <div className="w-full">
-                <h3 className="text-lg font-bold mb-2">Podcast Series</h3>
+                <h3 className="text-lg font-bold mb-2 flex items-center gap-2">
+                  Podcast Series
+                  <span className="bg-white/20 text-white text-[10px] px-1.5 py-0.5 rounded border border-white/30 uppercase tracking-wide font-bold flex items-center gap-1"><ExternalLink className="w-3 h-3"/> Live</span>
+                </h3>
                 <p className="text-sm text-red-100 mb-4">Tune into our purpose-built podcast. An easy way to deepen your understanding on the go.</p>
                 <audio controls className="w-full h-8 mt-2 rounded opacity-90 hover:opacity-100 transition-opacity">
                    <source src="https://www.dropbox.com/scl/fi/eo3czj23g4ct15kyzg10q/Finance_podcast.mp3?rlkey=b1y5gazst3tdwsg7c9wxuauyv&dl=1" type="audio/mpeg" />
@@ -747,6 +633,256 @@ const FinanceVerticalPage = ({ onBack, onNavigateToDig, onNavigateToMicroLearnin
 
       </main>
       <ChatWidget isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
+    </div>
+  );
+};
+
+// ==========================================
+// PAGE COMPONENT: VERTICALS PAGE
+// ==========================================
+const VerticalsPage = ({ onNavigate }) => {
+  const verticals = [
+    { id: 'finance', title: 'Finance', icon: TrendingUp, description: 'High-frequency trading, compliance, and data sovereignty.', status: 'Available' },
+    { id: 'healthcare', title: 'Healthcare', icon: Activity, description: 'Telemedicine, large imaging data, and secure patient records.', status: 'Coming Soon' },
+    { id: 'utilities', title: 'Utilities', icon: Zap, description: 'Smart grid modernization and OT/IT convergence.', status: 'Coming Soon' },
+    { id: 'government', title: 'Government', icon: ShieldCheck, description: 'Secure, resilient networks for defense and civilian agencies.', status: 'Coming Soon' },
+    { id: 'education', title: 'Education', icon: BookOpen, description: 'Connected campuses and remote learning infrastructure.', status: 'Coming Soon' },
+    { id: 'sp', title: 'Service Providers', icon: Globe, description: 'Next-gen 5G, residential broadband, and enterprise services.', status: 'Coming Soon' }
+  ];
+
+  return (
+    <div className="animate-fade-in bg-gray-50 min-h-screen pb-12">
+       {/* Breadcrumb */}
+       <div className="bg-gray-100 border-b border-gray-200 px-4 sm:px-6 lg:px-8 py-3">
+        <div className="max-w-7xl mx-auto flex items-center text-sm text-gray-500">
+           <button onClick={() => onNavigate('home')} className="hover:text-red-600 font-medium transition-colors">Home</button>
+           <span className="mx-2">/</span>
+           <span className="text-red-600 font-medium">Verticals</span>
+        </div>
+       </div>
+
+      <div className="bg-gray-900 text-white py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+           <h1 className="text-4xl font-bold mb-4">Industry Verticals</h1>
+           <p className="text-xl text-gray-400 max-w-3xl">Specialized insights, trends, and solution guides for our key markets.</p>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {verticals.map((v, i) => (
+            <div 
+              key={i} 
+              onClick={() => v.status === 'Available' ? onNavigate(v.id) : null}
+              className={`bg-white p-6 rounded-xl shadow-md border border-gray-100 flex flex-col h-full group ${v.status === 'Available' ? 'cursor-pointer hover:shadow-xl transition-all hover:-translate-y-1' : 'opacity-75'}`}
+            >
+              <div className="flex justify-between items-start mb-4">
+                <div className={`w-12 h-12 rounded-lg bg-gray-50 flex items-center justify-center ${v.status === 'Available' ? 'group-hover:bg-red-50' : ''}`}>
+                  <v.icon className={`w-6 h-6 ${v.status === 'Available' ? 'text-gray-700 group-hover:text-red-600' : 'text-gray-400'}`} />
+                </div>
+                {v.status === 'Available' ? (
+                   <span className="bg-green-100 text-green-800 text-xs font-bold px-2 py-1 rounded">AVAILABLE</span>
+                ) : (
+                   <span className="bg-gray-100 text-gray-500 text-xs font-bold px-2 py-1 rounded">COMING SOON</span>
+                )}
+              </div>
+              <h3 className={`text-xl font-bold mb-2 ${v.status === 'Available' ? 'text-gray-900 group-hover:text-red-600' : 'text-gray-500'} flex items-center gap-2`}>
+                 {v.title}
+                 {v.status === 'Available' && <span className="bg-green-100 text-green-800 text-[10px] px-1.5 py-0.5 rounded border border-green-200 uppercase tracking-wide font-bold flex items-center gap-1"><ExternalLink className="w-3 h-3"/> Live</span>}
+              </h3>
+              <p className="text-gray-600 mb-6 flex-grow text-sm leading-relaxed">{v.description}</p>
+              {v.status === 'Available' && (
+                <div className="flex items-center text-red-600 font-semibold text-sm group-hover:translate-x-1 transition-transform">
+                  Explore Toolkit <ArrowRight className="w-4 h-4 ml-2" />
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ==========================================
+// PAGE COMPONENT: TECHNOLOGIES PAGE
+// ==========================================
+const TechnologiesPage = ({ onNavigate }) => {
+  return (
+    <div className="animate-fade-in">
+       <div className="bg-gray-100 border-b border-gray-200 px-4 sm:px-6 lg:px-8 py-3">
+        <div className="max-w-7xl mx-auto flex items-center text-sm text-gray-500">
+           <button onClick={() => onNavigate('home')} className="hover:text-red-600 font-medium transition-colors">Home</button>
+           <span className="mx-2">/</span>
+           <span className="text-red-600 font-medium">Technologies</span>
+        </div>
+       </div>
+
+      <div className="bg-gray-900 text-white py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+           <h1 className="text-4xl font-bold mb-4">Core Technologies</h1>
+           <p className="text-xl text-gray-400 max-w-3xl">Explore the foundational technologies powering Ciena's adaptive networks and our partner solutions.</p>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          
+          <Card 
+            title="WaveLogic" 
+            description="Our industry-leading coherent optical technology. Delivers massive capacity over any distance with lower power and cost per bit."
+            icon={Zap} 
+            accentColor="red"
+            badges={["Optical", "Coherent"]}
+            actionText="Explore WL6"
+            onClick={() => onNavigate('wavelogic')}
+            isLiveLink={true}
+          />
+
+          <Card 
+            title="Waveserver" 
+            description="Compact, stackable interconnect platforms optimized for high-capacity DCI (Data Center Interconnect) and content delivery."
+            icon={Server} 
+            accentColor="blue"
+            badges={["DCI", "Hardware"]}
+            actionText="Learn More"
+          />
+
+          <Card 
+            title="Hollow Core Fibre" 
+            description="Next-gen fibre technology where light travels through air, significantly reducing latency for high-frequency trading."
+            icon={Activity} 
+            accentColor="green"
+            badges={["Emerging", "Low Latency"]}
+            actionText="Learn More"
+          />
+
+          <Card 
+            title="Quantum Safe Security" 
+            description="Advanced encryption solutions designed to protect critical data against future threats from quantum computing."
+            icon={ShieldCheck} 
+            accentColor="indigo"
+            badges={["Security", "Future-Proof"]}
+            actionText="Learn More"
+          />
+
+          <Card 
+            title="Coherent Pluggables" 
+            description="Compact pluggable optics (400ZR/ZR+) that bring high-performance coherent transmission to routers and switches."
+            icon={Cpu} 
+            accentColor="orange"
+            badges={["Pluggables", "IP-Optical"]}
+            actionText="Learn More"
+          />
+
+          <Card 
+            title="Dark Fibre" 
+            description="Unlit fibre infrastructure that allows operators to deploy their own transmission equipment for maximum control."
+            icon={Network} 
+            accentColor="slate"
+            badges={["Infrastructure"]}
+            actionText="Learn More"
+          />
+
+           <Card 
+            title="Fixed vs. Flex Grid" 
+            description="Understanding the shift from rigid spectrum allocation to flexible grids that optimize fibre capacity."
+            icon={Layers} 
+            accentColor="cyan"
+            badges={["Spectrum", "Architecture"]}
+            actionText="Learn More"
+          />
+
+          <Card 
+            title="SD-WAN" 
+            description="Software-Defined Wide Area Networking. Decouples control software from hardware for agile, cloud-ready networks."
+            icon={Globe} 
+            accentColor="teal"
+            badges={["Software", "Edge"]}
+            actionText="Learn More"
+          />
+
+          <Card 
+            title="Spectrum Services" 
+            description="Managing and optimizing optical spectrum to maximize bandwidth efficiency across subsea and terrestrial networks."
+            icon={Wifi} 
+            accentColor="violet"
+            badges={["Spectrum"]}
+            actionText="Learn More"
+          />
+
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ==========================================
+// PAGE COMPONENT: PARTNERS PAGE
+// ==========================================
+const PartnersPage = ({ onBack }) => {
+  const partners = [
+    { name: "Ziply Fiber", url: "ziplyfiber.com", type: "Carrier Managed Services Provider" },
+    { name: "Vocus", url: "www.vocus.com.au", type: "Carrier Managed Services Provider" },
+    { name: "Verizon", url: "www.verizon.com", type: "Carrier Managed Services Provider" },
+    { name: "Uniti Fiber", url: "www.uniti.com", type: "Carrier Managed Services Provider" },
+    { name: "Telxius Cable", url: "www.telxius.com", type: "Carrier Managed Services Provider" },
+    { name: "Tampnet AS", url: "www.tampnet.com", type: "Carrier Managed Services Provider" },
+    { name: "PLDT Inc.", url: "www.pldt.com.ph", type: "Carrier Managed Services Provider" },
+    { name: "FLAG Telecom", url: "www.flagtel.com", type: "Carrier Managed Services Provider" },
+    { name: "Etisalat", url: "www.etisalat.ae", type: "Carrier Managed Services Provider" },
+    { name: "Space World", url: "www.constl.com", type: "Carrier Managed Services Provider" },
+    { name: "Consolidated", url: "www.consolidated.com", type: "Carrier Managed Services Provider" },
+    { name: "Claro", url: "www.claro.com.co", type: "Carrier Managed Services Provider" },
+    { name: "Cirion", url: "www.ciriontechnologies.com", type: "Carrier Managed Services Provider" },
+    { name: "Beyon", url: "www.batelco.com", type: "Carrier Managed Services Provider" },
+    { name: "Arelion", url: "www.arelion.com", type: "Carrier Managed Services Provider" },
+    { name: "Aqua Comms", url: "www.aquacomms.com", type: "Carrier Managed Services Provider" },
+    { name: "Angola Cables", url: "www.angolacables.co.ao", type: "Carrier Managed Services Provider" },
+    { name: "WIN Technology", url: "wintechnology.com", type: "Carrier Managed Services Provider" },
+    { name: "EXA Infrastructure", url: "www.exainfra.net", type: "Carrier Managed Services Provider" },
+    { name: "WOW!", url: "www.wowway.com", type: "Carrier Managed Services Provider" },
+    { name: "Vodafone", url: "www.vodafone.co.uk", type: "Carrier Managed Services Provider" }
+  ];
+
+  return (
+    <div className="animate-fade-in bg-gray-50 min-h-screen pb-12">
+      <div className="bg-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+           <h1 className="text-3xl font-bold text-gray-900 mb-2">Find a Partner</h1>
+           <p className="text-gray-500 max-w-2xl">Locate the right partner to help you design, build, and manage your network with Ciena solutions.</p>
+        </div>
+      </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex flex-col md:flex-row gap-8">
+          <div className="w-full md:w-64 flex-shrink-0 space-y-6">
+            <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+              <div className="flex justify-between items-center mb-3"><h3 className="font-bold text-gray-900 text-sm">Filters</h3><button className="text-xs text-blue-600 hover:underline">Clear All</button></div>
+              <div className="flex flex-wrap gap-2 mb-4"><div className="flex items-center bg-gray-200 text-gray-700 px-2 py-1 rounded text-xs">Carrier Managed... <X className="w-3 h-3 ml-1 cursor-pointer"/></div></div>
+            </div>
+            <div className="border-b border-gray-200 pb-4"><button className="flex justify-between w-full text-left font-semibold text-sm text-gray-900 mb-2">Ciena Partner Type <ChevronDown className="w-4 h-4"/></button><div className="space-y-2 pl-1"><label className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer"><input type="checkbox" className="rounded text-red-600 focus:ring-red-500" defaultChecked/><span>Carrier Managed Services Provider [77]</span></label></div></div>
+            <div className="border-b border-gray-200 pb-4"><button className="flex justify-between w-full text-left font-semibold text-sm text-gray-900 mb-2">Geo Regions served <ChevronDown className="w-4 h-4"/></button><div className="space-y-2 pl-1">{["North America [48]", "NorthAm Federal [14]", "Europe Middle East [20]", "Caribbean & Latin [13]", "Asia Pacific [15]"].map((item, i) => (<label key={i} className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer"><input type="checkbox" className="rounded text-red-600 focus:ring-red-500"/><span>{item}</span></label>))}</div></div>
+             <div className="border-b border-gray-200 pb-4"><button className="flex justify-between w-full text-left font-semibold text-sm text-gray-900 mb-2">Vertical <ChevronDown className="w-4 h-4"/></button><div className="space-y-2 pl-1">{["Banking/Finance [56]", "Education [44]", "Gov/Civilian [17]", "Healthcare [46]"].map((item, i) => (<label key={i} className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer"><input type="checkbox" className="rounded text-red-600 focus:ring-red-500"/><span>{item}</span></label>))}</div></div>
+          </div>
+          <div className="flex-1">
+             <div className="mb-6 relative"><input type="text" placeholder="Search partners..." className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 shadow-sm"/><Search className="absolute left-3 top-3.5 text-gray-400 w-5 h-5"/></div>
+             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+               {partners.map((p, idx) => (
+                 <div key={idx} className="bg-white border border-gray-100 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col items-start h-full">
+                    <div className="h-12 w-auto mb-4 flex items-center">
+                       <img src={`https://logo.clearbit.com/${p.url}`} alt={p.name} className="max-h-12 max-w-[120px] object-contain" onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'block'; }}/>
+                       <span className="text-xl font-bold text-gray-800 hidden">{p.name}</span>
+                    </div>
+                    <h3 className="font-bold text-gray-900 mb-1">{p.name}</h3>
+                    <p className="text-xs text-blue-600 mb-2 hover:underline cursor-pointer">{p.url}</p>
+                    <p className="text-xs text-gray-500 mt-auto pt-4 border-t w-full border-gray-50">{p.type}</p>
+                 </div>
+               ))}
+             </div>
+             <div className="mt-8 flex justify-center items-center gap-4 text-sm font-medium text-gray-600"><span className="text-gray-400 cursor-not-allowed">← Previous</span><span className="text-red-600 border-b-2 border-red-600 px-2 pb-1">1</span><span className="hover:text-red-600 cursor-pointer">2</span><span className="hover:text-red-600 cursor-pointer">3</span><span className="hover:text-red-600 cursor-pointer">Next →</span></div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
