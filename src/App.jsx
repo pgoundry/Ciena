@@ -15,10 +15,15 @@ import {
   X,
   Send,
   Menu,
-  ChevronDown
+  ChevronDown,
+  Globe,
+  Server,
+  Activity,
+  Briefcase,
+  Layers
 } from 'lucide-react';
 
-// --- Components ---
+// --- Shared UI Components ---
 
 const Button = ({ children, variant = 'primary', className = '', ...props }) => {
   const baseStyle = "px-6 py-2 rounded-full font-medium transition-all duration-300 transform hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-offset-2";
@@ -36,13 +41,22 @@ const Button = ({ children, variant = 'primary', className = '', ...props }) => 
   );
 };
 
-const Card = ({ title, description, icon: Icon, actionText, onClick, accentColor = "red" }) => (
+const Card = ({ title, description, icon: Icon, actionText, onClick, accentColor = "red", badges = [] }) => (
   <div 
     className="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 flex flex-col h-full group cursor-pointer"
     onClick={onClick}
   >
-    <div className={`w-12 h-12 rounded-lg bg-${accentColor}-50 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
-      <Icon className={`w-6 h-6 text-${accentColor}-600`} />
+    <div className="flex justify-between items-start mb-4">
+      <div className={`w-12 h-12 rounded-lg bg-${accentColor}-50 flex items-center justify-center group-hover:scale-110 transition-transform`}>
+        <Icon className={`w-6 h-6 text-${accentColor}-600`} />
+      </div>
+      {badges.length > 0 && (
+        <div className="flex gap-2">
+          {badges.map((badge, i) => (
+            <span key={i} className="px-2 py-1 bg-gray-100 text-gray-600 text-xs font-bold rounded uppercase tracking-wider">{badge}</span>
+          ))}
+        </div>
+      )}
     </div>
     <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-red-600 transition-colors">{title}</h3>
     <p className="text-gray-600 mb-6 flex-grow text-sm leading-relaxed">{description}</p>
@@ -128,48 +142,191 @@ const ChatWidget = ({ isOpen, onClose }) => {
   );
 };
 
-// --- Main App Component ---
+// --- Page Components ---
 
-export default function App() {
-  const [isChatOpen, setIsChatOpen] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
+const HomePage = ({ onNavigate }) => {
   return (
-    <div className="min-h-screen bg-gray-50 font-sans text-gray-900 selection:bg-red-100">
-      
-      {/* Navigation */}
-      <nav className="bg-white border-b border-gray-200 sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex items-center gap-2">
-              <img 
-                src="https://logo.clearbit.com/ciena.com" 
-                alt="Ciena" 
-                className="h-8 w-auto"
-                onError={(e) => {
-                  e.target.onerror = null; 
-                  e.target.style.display = 'none';
-                  e.target.parentNode.innerHTML = '<span class="text-3xl font-black tracking-tighter text-red-600 lowercase" style="font-family: system-ui, sans-serif">ciena</span>';
-                }}
-              />
-            </div>
-            
-            <div className="hidden md:flex items-center space-x-8 text-sm font-medium text-gray-600">
-              <a href="#" className="hover:text-red-600 transition-colors">Verticals</a>
-              <a href="#" className="hover:text-red-600 transition-colors">Products</a>
-              <a href="#" className="hover:text-red-600 transition-colors">Insights</a>
-              <a href="#" className="hover:text-red-600 transition-colors">Support</a>
-              <Button variant="primary" className="px-4 py-1.5 text-sm">Log In</Button>
-            </div>
-
-            <div className="md:hidden flex items-center">
-              <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-                <Menu className="w-6 h-6 text-gray-600" />
-              </button>
-            </div>
+    <div className="animate-fade-in">
+      {/* Home Hero */}
+      <section className="bg-gray-900 text-white relative py-20 overflow-hidden">
+        <div className="absolute inset-0 opacity-20">
+             <img 
+            src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80" 
+            alt="Data Center" 
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-r from-gray-900 via-gray-900/90 to-transparent"></div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <h1 className="text-4xl md:text-5xl font-extrabold mb-6 tracking-tight">
+            Enablement <span className="text-red-600">Portal</span>
+          </h1>
+          <p className="text-xl text-gray-300 max-w-2xl mb-8 leading-relaxed">
+            Your central hub for Ciena enablement resources. Explore service libraries, partner profiles, and deep-dive vertical intelligence to accelerate your sales conversations.
+          </p>
+          <div className="flex gap-4">
+            <Button onClick={() => document.getElementById('verticals').scrollIntoView({behavior: 'smooth'})}>Explore Verticals</Button>
+            <Button variant="outline">New Solutions</Button>
           </div>
         </div>
-      </nav>
+      </section>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-24">
+        
+        {/* Services Library */}
+        <section>
+          <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center gap-4">
+              <div className="h-8 w-1 bg-red-600 rounded-full"></div>
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">Services Library</h2>
+                <p className="text-gray-500 text-sm mt-1">Clear summaries of key offerings and their value.</p>
+              </div>
+            </div>
+            <a href="#" className="text-red-600 font-semibold text-sm hover:underline">View All Services</a>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            <Card 
+              title="Adaptive Network™" 
+              description="An end-to-end automated solution that combines programmable infrastructure, analytics, and software control to adapt to changing demands."
+              icon={Activity}
+              actionText="View Solution"
+            />
+            <Card 
+              title="Optical Networking" 
+              description="Market-leading coherent optics that maximize fiber capacity and reach, reducing cost per bit for high-growth bandwidth applications."
+              icon={Zap}
+              actionText="View Solution"
+            />
+            <Card 
+              title="Routing & Switching" 
+              description="Next-gen metro and edge routing platforms designed to bring IP and Optical layers together for simplified, efficient operations."
+              icon={Layers}
+              actionText="View Solution"
+            />
+          </div>
+        </section>
+
+        {/* Partner Profiles */}
+        <section className="bg-gray-50 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 py-16">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex items-center justify-between mb-8">
+              <div className="flex items-center gap-4">
+                <div className="h-8 w-1 bg-red-600 rounded-full"></div>
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900">Partner Profiles</h2>
+                  <p className="text-gray-500 text-sm mt-1">Snapshots of key partners and growth opportunities.</p>
+                </div>
+              </div>
+              <a href="#" className="text-red-600 font-semibold text-sm hover:underline flex items-center group">
+                View All Profiles <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+              </a>
+            </div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <Card 
+                title="Virgin Media O2" 
+                description="Converged connectivity champion in the UK. Focused on network expansion and 5G rollout. Key opportunities in high-capacity backhaul and XGS-PON."
+                icon={Globe}
+                accentColor="red"
+                badges={["Tier 1", "UK"]}
+                actionText="View Profile"
+              />
+              <Card 
+                title="Colt" 
+                description="Global digital infrastructure company. Investing heavily in IQ Network. High demand for On Demand services and high-bandwidth optical solutions."
+                icon={Server}
+                accentColor="rose"
+                badges={["Global", "On Demand"]}
+                actionText="View Profile"
+              />
+              <Card 
+                title="Zayo" 
+                description="Leading communications infrastructure provider. Extensive fiber footprint. Strategic partner for dark fiber and wavelength services."
+                icon={Zap}
+                accentColor="orange"
+                badges={["Infrastructure", "Dark Fiber"]}
+                actionText="View Profile"
+              />
+            </div>
+          </div>
+        </section>
+
+        {/* Market / Vertical Knowledge */}
+        <section id="verticals">
+          <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center gap-4">
+              <div className="h-8 w-1 bg-red-600 rounded-full"></div>
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">Market & Vertical Knowledge</h2>
+                <p className="text-gray-500 text-sm mt-1">Focused guides on industry trends and buying behaviors.</p>
+              </div>
+            </div>
+            <a href="#" className="text-red-600 font-semibold text-sm hover:underline flex items-center group">
+               View All Verticals <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+            </a>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            {/* The Finance Card links to the detailed page */}
+            <div 
+              onClick={() => onNavigate('finance')}
+              className="bg-white p-6 rounded-xl shadow-lg border-t-4 border-red-600 hover:shadow-2xl hover:-translate-y-1 transition-all cursor-pointer group"
+            >
+              <div className="flex justify-between items-start mb-4">
+                <div className="p-3 bg-red-50 rounded-lg group-hover:bg-red-100 transition-colors">
+                  <TrendingUp className="w-8 h-8 text-red-600" />
+                </div>
+                <span className="bg-red-100 text-red-800 text-xs font-bold px-2 py-1 rounded">FEATURED</span>
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">Finance</h3>
+              <p className="text-gray-600 mb-6 text-sm">
+                High-frequency trading, compliance, and data sovereignty. Learn how to position low-latency solutions.
+              </p>
+              <div className="flex items-center text-red-600 font-bold text-sm">
+                Open Toolkit <ArrowRight className="w-4 h-4 ml-2" />
+              </div>
+            </div>
+
+            {/* Placeholder Verticals */}
+            <Card 
+              title="Healthcare" 
+              description="Telemedicine and large imaging data transfers. Focus on high-bandwidth, secure connectivity for hospital networks."
+              icon={Activity}
+              accentColor="teal"
+              actionText="Coming Soon"
+            />
+            <Card 
+              title="Utilities" 
+              description="Smart grid modernization and OT/IT convergence. Ruggedized solutions for harsh environments."
+              icon={Zap}
+              accentColor="orange"
+              actionText="Coming Soon"
+            />
+          </div>
+        </section>
+
+      </div>
+    </div>
+  );
+};
+
+const FinanceVerticalPage = ({ onBack }) => {
+  const [isChatOpen, setIsChatOpen] = useState(false);
+
+  return (
+    <div className="animate-fade-in">
+       {/* Breadcrumb / Back Navigation */}
+       <div className="bg-gray-100 border-b border-gray-200 px-4 sm:px-6 lg:px-8 py-3">
+        <div className="max-w-7xl mx-auto flex items-center text-sm text-gray-500">
+           <button onClick={onBack} className="hover:text-red-600 font-medium transition-colors">Home</button>
+           <span className="mx-2">/</span>
+           <span className="text-gray-900 font-medium">Verticals</span>
+           <span className="mx-2">/</span>
+           <span className="text-red-600 font-medium">Finance</span>
+        </div>
+       </div>
 
       {/* Hero Section */}
       <header className="relative bg-gray-900 text-white overflow-hidden">
@@ -192,7 +349,7 @@ export default function App() {
               Decision Intelligence & Strategic Insights designed to accelerate your customer conversations.
             </p>
             <div className="flex flex-wrap gap-4">
-              <Button onClick={() => window.scrollTo({ top: 800, behavior: 'smooth' })}>
+              <Button onClick={() => document.getElementById('resources').scrollIntoView({ behavior: 'smooth' })}>
                 Explore Resources
               </Button>
               <Button variant="white" onClick={() => setIsChatOpen(true)}>
@@ -208,7 +365,7 @@ export default function App() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-20">
 
         {/* Quick Access Tools */}
-        <section>
+        <section id="resources">
           <div className="flex items-center gap-4 mb-8">
             <div className="h-8 w-1 bg-red-600 rounded-full"></div>
             <h2 className="text-2xl font-bold">Quick Access Tools</h2>
@@ -312,7 +469,6 @@ export default function App() {
             <h2 className="text-2xl font-bold">Learning Modules</h2>
           </div>
           <div className="grid md:grid-cols-2 gap-8">
-            
             <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm hover:shadow-lg transition-all flex gap-6">
               <div className="shrink-0">
                 <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center">
@@ -338,37 +494,81 @@ export default function App() {
                 <button className="text-sm font-bold hover:text-red-200 flex items-center">Play Now <ArrowRight className="w-3 h-3 ml-1"/></button>
               </div>
             </div>
-
-            <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm hover:shadow-lg transition-all flex gap-6">
-              <div className="shrink-0">
-                <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center">
-                  <MessageSquare className="w-8 h-8 text-gray-400" />
-                </div>
-              </div>
-              <div>
-                <h3 className="text-lg font-bold mb-2">Meeting Simulation</h3>
-                <p className="text-sm text-gray-600 mb-4">Rehearse a live customer conversation with a virtual Finance exec.</p>
-                <Button variant="text" className="text-sm">Start Sim <ArrowRight className="w-3 h-3 ml-1 inline"/></Button>
-              </div>
-            </div>
-
-            <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm hover:shadow-lg transition-all flex gap-6">
-              <div className="shrink-0">
-                <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center">
-                  <Video className="w-8 h-8 text-gray-400" />
-                </div>
-              </div>
-              <div>
-                <h3 className="text-lg font-bold mb-2">Webinars</h3>
-                <p className="text-sm text-gray-600 mb-4">Access curated pre-recorded webinars covering developments in the sector.</p>
-                <Button variant="text" className="text-sm">Browse Library <ArrowRight className="w-3 h-3 ml-1 inline"/></Button>
-              </div>
-            </div>
-
           </div>
         </section>
 
       </main>
+
+      <ChatWidget isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
+    </div>
+  );
+};
+
+// --- Main App Component ---
+
+export default function App() {
+  const [currentView, setCurrentView] = useState('home'); // 'home' | 'finance'
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const navigateTo = (view) => {
+    setCurrentView(view);
+    window.scrollTo(0, 0);
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50 font-sans text-gray-900 selection:bg-red-100">
+      
+      {/* Navigation */}
+      <nav className="bg-white border-b border-gray-200 sticky top-0 z-40">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-16">
+            <div 
+              className="flex items-center gap-2 cursor-pointer" 
+              onClick={() => navigateTo('home')}
+            >
+              <img 
+                src="https://logo.clearbit.com/ciena.com" 
+                alt="Ciena" 
+                className="h-8 w-auto"
+                onError={(e) => {
+                  e.target.onerror = null; 
+                  e.target.style.display = 'none';
+                  e.target.parentNode.innerHTML = '<span class="text-3xl font-black tracking-tighter text-red-600 lowercase" style="font-family: system-ui, sans-serif">ciena</span>';
+                }}
+              />
+            </div>
+            
+            <div className="hidden md:flex items-center space-x-8 text-sm font-medium text-gray-600">
+              <button onClick={() => navigateTo('home')} className={`hover:text-red-600 transition-colors ${currentView === 'home' ? 'text-red-600 font-bold' : ''}`}>Home</button>
+              <button onClick={() => document.getElementById('verticals')?.scrollIntoView({behavior: 'smooth'})} className="hover:text-red-600 transition-colors">Verticals</button>
+              <button className="hover:text-red-600 transition-colors">Products</button>
+              <button className="hover:text-red-600 transition-colors">Partners</button>
+              <Button variant="primary" className="px-4 py-1.5 text-sm">Log In</Button>
+            </div>
+
+            <div className="md:hidden flex items-center">
+              <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+                <Menu className="w-6 h-6 text-gray-600" />
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        {/* Mobile Menu */}
+        {mobileMenuOpen && (
+           <div className="md:hidden bg-white border-t border-gray-100 p-4 space-y-4">
+              <button onClick={() => navigateTo('home')} className="block w-full text-left font-medium">Home</button>
+              <button onClick={() => navigateTo('finance')} className="block w-full text-left font-medium">Finance Vertical</button>
+           </div>
+        )}
+      </nav>
+
+      {/* View Switcher */}
+      {currentView === 'home' ? (
+        <HomePage onNavigate={navigateTo} />
+      ) : (
+        <FinanceVerticalPage onBack={() => navigateTo('home')} />
+      )}
 
       {/* Footer */}
       <footer className="bg-gray-900 text-gray-400 py-12 border-t border-gray-800">
@@ -416,9 +616,6 @@ export default function App() {
         </div>
       </footer>
 
-      {/* Interactive Chat Widget Overlay */}
-      <ChatWidget isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
-      
     </div>
   );
 }
