@@ -614,7 +614,7 @@ const FinanceVerticalPage = ({ onBack, onNavigateToDig, onNavigateToMicroLearnin
                 </h3>
                 <p className="text-sm text-red-100 mb-4">Tune into our purpose-built podcast. An easy way to deepen your understanding on the go.</p>
                 <audio controls className="w-full h-8 mt-2 rounded opacity-90 hover:opacity-100 transition-opacity">
-                   <source src="https://www.dropbox.com/scl/fi/eo3czj23g4ct15kyzg10q/Finance_podcast.mp3?rlkey=b1y5gazst3tdwsg7c9wxuauyv&dl=1" type="audio/mpeg" />
+                   <source src="../Finance_podcast.mp3?rlkey=b1y5gazst3tdwsg7c9wxuauyv&dl=1" type="audio/mpeg" />
                    Your browser does not support the audio element.
                 </audio>
               </div>
